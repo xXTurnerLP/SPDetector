@@ -14,9 +14,9 @@ public:
 	 *
 	 * \param size - Max size
 	 */
-	CircularBuffer<T>(const size_t size) noexcept : buffer(new T[size]), buffer_size(size), selector(0)
+	CircularBuffer<T>(const size_t size) noexcept : m_Buffer(new T[size]), m_BufferSize(size), m_Selector(0)
 	{
-		memset(buffer, 0, size);
+		memset(m_Buffer, 0, size);
 	}
 
 	/**
@@ -25,14 +25,14 @@ public:
 	 * \param size - Max size
 	 * \param ... - Each element
 	 */
-	CircularBuffer<T>(const char* CONSTRUCTOR_DUPLICATE_DUMMY_BYPASS, const size_t size, ...) noexcept : buffer(new T[size]), buffer_size(size), selector(0)
+	CircularBuffer<T>(const char* CONSTRUCTOR_DUPLICATE_DUMMY_BYPASS, const size_t size, ...) noexcept : m_Buffer(new T[size]), m_BufferSize(size), m_Selector(0)
 	{
 		va_list args;
 		va_start(args, size);
 
 		for (size_t i = 0; i < size; i++)
 		{
-			buffer[i] = va_arg(args, T);
+			m_Buffer[i] = va_arg(args, T);
 		}
 
 		va_end(args);
@@ -40,9 +40,10 @@ public:
 
 	~CircularBuffer() noexcept
 	{
-		delete[] buffer;
+		delete[] m_Buffer;
 	}
 
+public:
 	/**
 	 * Insert element at latest position (rotating/overwriting as needed).
 	 *
@@ -50,10 +51,10 @@ public:
 	 */
 	void Insert(T& element) noexcept
 	{
-		buffer[selector++] = element;
+		m_Buffer[m_Selector++] = element;
 
-		if (selector == buffer_size)
-			selector = 0;
+		if (m_Selector == m_BufferSize)
+			m_Selector = 0;
 	}
 
 	/**
@@ -63,10 +64,10 @@ public:
 	 */
 	const T Peek() noexcept
 	{
-		if (selector == 0)
-			return buffer[buffer_size - 1];
+		if (m_Selector == 0)
+			return m_Buffer[m_BufferSize - 1];
 		else
-			return buffer[selector - 1];
+			return m_Buffer[m_Selector - 1];
 	}
 
 	/**
@@ -77,22 +78,22 @@ public:
 	 */
 	bool Compare(CircularBuffer& other) noexcept
 	{
-		if (buffer_size != other.buffer_size)
+		if (m_BufferSize != other.m_BufferSize)
 			return false;
 
-		int offset = calculateOffset(buffer_size, buffer, other.buffer);
+		int offset = calculateOffset(m_BufferSize, m_Buffer, other.m_Buffer);
 
 		if (offset == -1)
 			return false;
 
-		for (size_t i = 0; i < buffer_size; i++)
+		for (size_t i = 0; i < m_BufferSize; i++)
 		{
-			if (buffer[i] != other.buffer[offset++])
+			if (m_Buffer[i] != other.m_Buffer[offset++])
 			{
 				return false;
 			}
 
-			if (offset == buffer_size) // prevent buffer overflow
+			if (offset == m_BufferSize) // prevent buffer overflow
 				offset = 0;
 		}
 
@@ -103,19 +104,19 @@ public:
 	// Copy
 	CircularBuffer& operator=(CircularBuffer& other) noexcept
 	{
-		if (buffer_size == other.buffer_size)
+		if (m_BufferSize == other.m_BufferSize)
 		{
-			memcpy(buffer, other.buffer, buffer_size);
+			memcpy(m_Buffer, other.m_Buffer, m_BufferSize);
 		}
 		else
 		{
-			delete[] buffer;
-			buffer = new T[other.buffer_size];
-			buffer_size = other.buffer_size;
-			memcpy(buffer, other.buffer, buffer_size);
+			delete[] m_Buffer;
+			m_Buffer = new T[other.m_BufferSize];
+			m_BufferSize = other.m_BufferSize;
+			memcpy(m_Buffer, other.m_Buffer, m_BufferSize);
 		}
 
-		selector = other.selector;
+		m_Selector = other.m_Selector;
 
 		return *this;
 	}
@@ -149,7 +150,7 @@ private:
 		{
 			size_t matches = 0;
 			size_t offset_i_original = offset.back(); offset.pop_back();
-			size_t offset_i = offset_i_original;
+			size_t offset_i = offset_i_original; // doing this to avoid recalculating offset since we are modifying it
 
 			for (size_t i = 0; i < buffer_size; i++)
 			{
@@ -163,15 +164,15 @@ private:
 			}
 
 			if (matches == buffer_size)
-				return offset_i_original; // doing this to avoid recalculating offset since we are modifying it
+				return offset_i_original;
 		}
 
 		return -1; // not the same buffers
 	}
 
 private:
-	T* buffer;
-	size_t buffer_size;
-	size_t selector;
+	T* m_Buffer;
+	size_t m_BufferSize;
+	size_t m_Selector;
 };
 

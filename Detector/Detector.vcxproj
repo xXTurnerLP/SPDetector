@@ -75,11 +75,16 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\config.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="vendor\simpleini\ConvertUTF.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CircularBuffer.hpp" />
+    <ClInclude Include="src\config.hpp" />
     <ClInclude Include="src\state.h" />
+    <ClInclude Include="vendor\simpleini\ConvertUTF.h" />
+    <ClInclude Include="vendor\simpleini\SimpleIni.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>

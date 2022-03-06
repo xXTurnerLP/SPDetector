@@ -1,15 +1,19 @@
-#include "CircularBuffer.hpp"
 #include <wiringPi.h>
 #include <stdio.h>
 
+#include "CircularBuffer.hpp"
 #include "state.h"
+#include "config.hpp"
 
 int main(void)
 {
 	wiringPiSetupSys();
 
+	// set pin modes
 	system("gpio export 25 in");
 	system("gpio export 24 in");
+
+	Config cfg("config.ini");
 
 	State state;
 
