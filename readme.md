@@ -13,10 +13,14 @@ After cloning and building the project, binary should be on the RPi4 (Raspberry 
 When you run the binary for the first time it will generate `config.ini` file, you need to open it with a text editor and edit the template to match your data. For more information read section **Config file**.
 
 # Config file
+Required fields should be valid, optional if left blank will be either blank or use an internal default value
+
+### --- Required ---
 id (string): `Replace "00000000-0000-0000-0000-000000000000" with your own UUID for that device/parking` <br>
+total (int): `Total parking spots, int` <br>
+### --- Optional ---
 name (string): `Name of the parking` <br>
-name (string): `Street Address of the parking` <br>
+address (string): `Street Address of the parking` <br>
 GPS Lng (float): `GPS Longitute coordinate of parking` <br>
 GPS Lat (float): `GPS Latitude coordinate of parking` <br>
-total (int): `Total parking spots, int` <br>
 type (string): `Type of parking "free"/"paid" and if paid the price is written in the format "paid X/h" or "paid X/entry" (if the parking is paid for only once when entering) where X is the money`
