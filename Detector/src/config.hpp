@@ -7,6 +7,18 @@
 
 #include "../vendor/simpleini/SimpleIni.h"
 
+typedef struct ConfigData
+{
+	const char* id;
+	unsigned int total;
+	const char* remote_server_endpoint;
+	const char* name;
+	const char* address;
+	double gps_lat;
+	double gps_lng;
+	const char* type;
+} ConfigData;
+
 class Config
 {
 public:
@@ -17,12 +29,18 @@ public:
 	 */
 	Config(const char* path) noexcept;
 
+public:
+	const ConfigData& GetConfigData() const noexcept;
+
 private:
-	bool doesExist() noexcept;
+	bool doesExist() const noexcept;
 	void loadConfig() noexcept;
+	void validateLoadedConfig() const noexcept;
+	void populateBuffer() noexcept;
 	void generateDefault() noexcept;
 
 private:
 	const char* m_Path;
 	CSimpleIniA m_ini;
+	ConfigData m_cfgData;
 };

@@ -1,9 +1,11 @@
 #include <wiringPi.h>
-#include <stdio.h>
+#include <curl/curl.h>
+#include <json/json.hpp>
 
 #include "CircularBuffer.hpp"
 #include "state.h"
 #include "config.hpp"
+#include "utils.h"
 
 int main(void)
 {
@@ -51,11 +53,39 @@ int main(void)
 
 		if (stateBuffer.Compare(referenceBuffer_Enter))
 		{
-			puts("\t\t\t\t\t<< Enter");
+			const ConfigData cfgData = cfg.GetConfigData();
+
+			nlohmann::json json;
+
+			json["id"] = cfgData.id;
+			json["total"] = cfgData.total;
+			json["name"] = cfgData.name;
+			json["address"] = cfgData.address;
+			json["gps_lng"] = cfgData.gps_lng;
+			json["gps_lat"] = cfgData.gps_lat;
+			json["type"] = cfgData.type;
+
+			json["data"] = "ENTER";
+
+			SendPost(cfgData.remote_server_endpoint, json.dump());
 		}
 		else if (stateBuffer.Compare(referenceBuffer_Leave))
 		{
-			puts("\t\t\tLeave >>");
+			const ConfigData cfgData = cfg.GetConfigData();
+
+			nlohmann::json json;
+
+			json["id"] = cfgData.id;
+			json["total"] = cfgData.total;
+			json["name"] = cfgData.name;
+			json["address"] = cfgData.address;
+			json["gps_lng"] = cfgData.gps_lng;
+			json["gps_lat"] = cfgData.gps_lat;
+			json["type"] = cfgData.type;
+
+			json["data"] = "LEAVE";
+
+			SendPost(cfgData.remote_server_endpoint, json.dump());
 		}
 
 		delay(10);

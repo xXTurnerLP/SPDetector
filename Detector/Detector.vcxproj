@@ -24,10 +24,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
     <RemoteRootDir>~/dev</RemoteRootDir>
+    <RemoteProjectRelDir>$(MSBuildProjectName)</RemoteProjectRelDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <RemoteRootDir>~/dev</RemoteRootDir>
+    <RemoteProjectRelDir>$(MSBuildProjectName)</RemoteProjectRelDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -37,14 +39,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <RemoteCompileLocalCopyObjectFiles>false</RemoteCompileLocalCopyObjectFiles>
     <RemoteCCompileToolExe>g++</RemoteCCompileToolExe>
+    <MultiProcNumber>5</MultiProcNumber>
+    <EnableIncrementalBuild>No</EnableIncrementalBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <RemoteCompileLocalCopyObjectFiles>false</RemoteCompileLocalCopyObjectFiles>
     <RemoteCCompileToolExe>g++</RemoteCCompileToolExe>
+    <MultiProcNumber>5</MultiProcNumber>
+    <EnableIncrementalBuild>No</EnableIncrementalBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
-      <LibraryDependencies>wiringPi</LibraryDependencies>
+      <LibraryDependencies>wiringPi;curl</LibraryDependencies>
       <Trace>false</Trace>
     </Link>
     <RemotePostBuildEvent>
@@ -56,7 +62,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Link>
-      <LibraryDependencies>wiringPi</LibraryDependencies>
+      <LibraryDependencies>wiringPi;curl</LibraryDependencies>
       <VerboseOutput>false</VerboseOutput>
       <Trace>false</Trace>
       <ShowProgress>false</ShowProgress>
@@ -72,17 +78,31 @@
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <CompileAs>Default</CompileAs>
       <Verbose>false</Verbose>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\config.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="vendor\simpleini\ConvertUTF.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CircularBuffer.hpp" />
     <ClInclude Include="src\config.hpp" />
     <ClInclude Include="src\state.h" />
+    <ClInclude Include="src\utils.h" />
+    <ClInclude Include="vendor\curl\curl.h" />
+    <ClInclude Include="vendor\curl\curlver.h" />
+    <ClInclude Include="vendor\curl\easy.h" />
+    <ClInclude Include="vendor\curl\mprintf.h" />
+    <ClInclude Include="vendor\curl\multi.h" />
+    <ClInclude Include="vendor\curl\options.h" />
+    <ClInclude Include="vendor\curl\stdcheaders.h" />
+    <ClInclude Include="vendor\curl\system.h" />
+    <ClInclude Include="vendor\curl\typecheck-gcc.h" />
+    <ClInclude Include="vendor\curl\urlapi.h" />
+    <ClInclude Include="vendor\json\json.hpp" />
     <ClInclude Include="vendor\simpleini\ConvertUTF.h" />
     <ClInclude Include="vendor\simpleini\SimpleIni.h" />
   </ItemGroup>
@@ -96,6 +116,7 @@
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <CompileAs>Default</CompileAs>
       <Verbose>false</Verbose>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
