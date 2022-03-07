@@ -17,7 +17,7 @@ Required fields should be valid, optional if left blank will be either blank or 
 
 ### --- Required ---
 id (string): `Replace "00000000-0000-0000-0000-000000000000" with your own UUID for that device/parking` <br>
-total (int): `Total parking spots, int` <br>
+total (uint): `Total parking spots` <br>
 remote-server-endpoint (string): `Endpoint of server where the raw data will be sent` <br>
 
 ### --- Optional ---
